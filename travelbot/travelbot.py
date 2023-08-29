@@ -1,10 +1,12 @@
 import openai
 from flask import Flask, request, render_template
+import os
 
 app = Flask(__name__)
 
 # 設定你的OpenAI API金鑰
-openai.api_key = "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"
+openai.api_key = os.environ["OPENAI_API_KEY"]
+# openai.api_key = "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"
 
 def generate_itinerary(location, days):
     # 使用OpenAI生成行程
@@ -14,8 +16,8 @@ def generate_itinerary(location, days):
         prompt=prompt,
         max_tokens=1000
     )
-    print("輸入 token 數量:", response.usage["prompt_tokens"])
-    print("生成 token 數量:", response.usage["generated_tokens"])
+    # print("輸入 token 數量:", response.usage["prompt_tokens"])
+    # print("生成 token 數量:", response.usage["generated_tokens"])
 
     return response.choices[0].text
 
