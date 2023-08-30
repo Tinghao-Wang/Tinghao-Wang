@@ -5,8 +5,8 @@ import os
 app = Flask(__name__)
 
 # 設定你的OpenAI API金鑰
-openai.api_key = os.environ["OPENAI_API_KEY"]
-# openai.api_key = "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"
+# openai.api_key = os.environ["OPENAI_API_KEY"]
+openai.api_key = "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"
 
 def generate_itinerary(location, days):
     # 使用OpenAI生成行程
