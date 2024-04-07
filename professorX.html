@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professor X</title>
+</head>
+<body>
+    <h1>YouTube內容擷取工具</h1>
+    <input type="text" id="youtubeUrl" placeholder="請輸入YouTube網址">
+    <button onclick="fetchHighlights()">擷取重點</button>
+
+    <div id="transcription">等待轉換...</div>
+    <div id="summary">等待節錄...</div>
+
+    <script>
+        function fetchHighlights() {
+            const url = document.getElementById('youtubeUrl').value;
+            // 響應包含 { transcription: "...", summary: "..." }
+            fetch('/process_video', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ youtubeUrl: url }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('transcription').textContent = data.transcription;
+                document.getElementById('summary').textContent = data.summary;
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
