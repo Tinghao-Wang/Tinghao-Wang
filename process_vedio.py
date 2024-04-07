@@ -33,14 +33,14 @@ def download_youtube_audio_as_mp3(youtube_url):
         video_title = info.get('title', 'DownloadedAudio')[:5]  # 獲取標題的前五個字元
         current_time = datetime.now().strftime("%Y%m%d_%H%M%S")  # 獲取當前時間戳
         # 結合影片標題的前五個字元與時間戳作為檔案名
-        final_filename = f"{video_title}_{current_time}.mp3"
+        final_filename = f"{video_title}_{current_time}"
         ydl_opts['outtmpl'] = final_filename  # 更新選項中的檔案名模板
 
     # 使用更新後的選項再次建立yt_dlp實例並下載轉換
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         ydl.download([youtube_url])
 
-    return segment_audio(final_filename, 5)  # 假設分段長度為5分鐘
+    return segment_audio(final_filename + ".mp3", 5)  # 假設分段長度為5分鐘
 
 # 音訊分段
 def segment_audio(filename, segment_length_minutes):
@@ -74,11 +74,11 @@ def transcribe_audio(segment_files):
     for filename in segment_files:
         try:
             with open(filename, "rb") as audio_file:
-                transcription = openai.Audio.create(
-                    model="whisper-1", 
-                    file=audio_file
+                transcription = client.audio.transcriptions.create(
+                model="whisper-1", 
+                file=audio_file
                 )
-                transcriptions.append(transcription["data"]["text"])
+                transcriptions.append(transcription.text)
         except FileNotFoundError:
             print(f"檔案 {filename} 不存在。")
         except Exception as e:
